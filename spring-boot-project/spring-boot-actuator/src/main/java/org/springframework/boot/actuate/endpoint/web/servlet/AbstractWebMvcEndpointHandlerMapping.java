@@ -175,11 +175,11 @@ public abstract class AbstractWebMvcEndpointHandlerMapping extends RequestMappin
 	protected void initHandlerMethods() {
 		for (ExposableWebEndpoint endpoint : this.endpoints) {
 			for (WebOperation operation : endpoint.getOperations()) {
-				registerMappingForOperation(endpoint, operation);
+				registerMappingForOperation(endpoint, operation); // 注册所有的 endpoint 对应的 HandlerMapping
 			}
 		}
 		if (this.shouldRegisterLinksMapping) {
-			registerLinksMapping();
+			registerLinksMapping();  // 注册形如 http://ip:port/actuator 对应的 HandlerMapping
 		}
 	}
 
@@ -239,7 +239,7 @@ public abstract class AbstractWebMvcEndpointHandlerMapping extends RequestMappin
 				.consumes(predicate.getConsumes().toArray(new String[0]))
 				.produces(predicate.getProduces().toArray(new String[0])).build();
 	}
-
+	// 注册形如 http://ip:port/actuator 对应的 HandlerMapping
 	private void registerLinksMapping() {
 		RequestMappingInfo mapping = RequestMappingInfo.paths(this.endpointMapping.createSubPath(""))
 				.methods(RequestMethod.GET).produces(this.endpointMediaTypes.getProduced().toArray(new String[0]))

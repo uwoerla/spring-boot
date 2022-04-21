@@ -70,7 +70,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class WebMvcEndpointManagementContextConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean
+	@ConditionalOnMissingBean // 处理所有带 @Endpoint 注解的 HandlerMapping；比如 http://ip:port/actuator/xxx
 	public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier,
 			ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier,
 			EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties,
@@ -84,7 +84,7 @@ public class WebMvcEndpointManagementContextConfiguration {
 		EndpointMapping endpointMapping = new EndpointMapping(basePath);
 		boolean shouldRegisterLinksMapping = shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
 		return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
-				corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath),
+				corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath)/*EndpointLink解析器；类似于 http://ip:port/actuator 这种页面会用到*/,
 				shouldRegisterLinksMapping, WebMvcAutoConfiguration.pathPatternParser);
 	}
 
@@ -102,13 +102,13 @@ public class WebMvcEndpointManagementContextConfiguration {
 			WebEndpointsSupplier webEndpointsSupplier, HealthEndpointGroups groups) {
 		Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
 		ExposableWebEndpoint health = webEndpoints.stream()
-				.filter((endpoint) -> endpoint.getEndpointId().equals(HealthEndpoint.ID)).findFirst().get();
+				.filter((endpoint) -> endpoint.getEndpointId().equals(HealthEndpoint.ID)).findFirst().get(); // health
 		return new AdditionalHealthEndpointPathsWebMvcHandlerMapping(health,
 				groups.getAllWithAdditionalPath(WebServerNamespace.MANAGEMENT));
 	}
 
 	@Bean
-	@ConditionalOnMissingBean
+	@ConditionalOnMissingBean // @ControllerEndpoint 和 @RestControllerEndpoint 注解的 HandlerMapping
 	public ControllerEndpointHandlerMapping controllerEndpointHandlerMapping(
 			ControllerEndpointsSupplier controllerEndpointsSupplier, CorsEndpointProperties corsProperties,
 			WebEndpointProperties webEndpointProperties) {

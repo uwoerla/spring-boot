@@ -128,7 +128,7 @@ public abstract class EndpointDiscoverer<E extends ExposableEndpoint<O>, O exten
 	private Collection<EndpointBean> createEndpointBeans() {
 		Map<EndpointId, EndpointBean> byId = new LinkedHashMap<>();
 		String[] beanNames = BeanFactoryUtils.beanNamesForAnnotationIncludingAncestors(this.applicationContext,
-				Endpoint.class);
+				Endpoint.class); // 获得所有的 Endpoint
 		for (String beanName : beanNames) {
 			if (!ScopedProxyUtils.isScopedTarget(beanName)) {
 				EndpointBean endpointBean = createEndpointBean(beanName);

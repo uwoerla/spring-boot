@@ -26,12 +26,12 @@ import org.springframework.util.Assert;
  *
  * @author Andy Wilkinson
  * @since 2.0.0
- */
+ */ // 类似于 http://ip:port/actuator 对应的响应中的一个 item
 public class Link {
 
-	private final String href;
+	private final String href;         // 超链接
 
-	private final boolean templated;
+	private final boolean templated;  // 是否是模板
 
 	/**
 	 * Creates a new {@link Link} with the given {@code href}.
